@@ -1,6 +1,6 @@
 from flask import Flask, render_template_string
 
-__version__ = "0.3.1.2"
+__version__ = "0.3.2"
 
 def template_html(body):
     template = '''
@@ -20,6 +20,16 @@ def template_html(body):
                     {{ script }}
 
                 </py-script>
+
+            {% endblock %}
+
+            {% block requirements %}
+
+                <py-config>
+
+                    packages = {{ requirements }}
+                
+                </py-config>
 
             {% endblock %}
 
@@ -55,6 +65,7 @@ class Router:
         self.script_content = ""
         self.style_content = ""
         self.body_content = ""
+        self.requirements = []
 
     def script(self, func):
         self.script_content = func
@@ -65,11 +76,17 @@ class Router:
     def css(self, func):
         self.style_content = func
 
+    def require(self, pkg: str):
+        self.requirements.append(pkg)
+    
+    def requires(self, pkgs: list):
+        self.requirements = pkgs
+
     def run(self, host='localhost', port=8080, debug=False):
         app = Flask(__name__)
 
         @app.route('/')
         def index():
-            return render_template_string(template_html(body=self.body_content), host=host, port=port, debug=debug, script=self.script_content, style=self.style_content)
+            return render_template_string(template_html(body=self.body_content), host=host, port=port, debug=debug, script=self.script_content, style=self.style_content, requirements=self.requirements)
 
         app.run(host=host, port=port, debug=debug)
