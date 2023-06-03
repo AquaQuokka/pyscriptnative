@@ -13,11 +13,11 @@ def template_html(body):
 
             <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 
-            {% block script %}
+            {% block py %}
 
                 <py-script>
 
-                    {{ script }}
+                    {{ py }}
 
                 </py-script>
 
@@ -52,6 +52,16 @@ def template_html(body):
                 ''' + body + '''
 
             {% endblock %}
+
+            {% block js %}
+
+                <script type="text/javascript">
+
+                    {{ js }}
+                
+                </script>
+            
+            {% endblock %}
                 
         </body>
 
@@ -62,20 +72,24 @@ def template_html(body):
 
 class Router:
     def __init__(self):
-        self.script_content = ""
-        self.style_content = ""
-        self.body_content = ""
+        self.htmlctx = ""
+        self.cssctx = ""
+        self.jsctx = ""
+        self.pyctx = ""
         self.requirements = []
 
-    def script(self, func):
-        self.script_content = func
-
     def html(self, func):
-        self.body_content = func
+        self.htmlctx = func
 
     def css(self, func):
-        self.style_content = func
+        self.cssctx = func
 
+    def js(self, func):
+        self.jsctx = func
+    
+    def py(self, func):
+        self.pyctx = func
+    
     def require(self, pkg: str):
         self.requirements.append(pkg)
     
@@ -87,6 +101,6 @@ class Router:
 
         @app.route('/')
         def index():
-            return render_template_string(template_html(body=self.body_content), host=host, port=port, debug=debug, script=self.script_content, style=self.style_content, requirements=self.requirements)
+            return render_template_string(template_html(body=self.htmlctx), host=host, port=port, debug=debug, css=self.cssctx, js=self.jsctx, py=self.pyctx, requirements=self.requirements)
 
         app.run(host=host, port=port, debug=debug)

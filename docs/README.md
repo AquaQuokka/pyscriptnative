@@ -21,14 +21,20 @@ def css():
     /* CSS here */
     """
 
-def script():
+def js():
+    return """
+    // JS here
+    """
+
+def py():
     return """
     # Python here
     """
 
 app.html(html())
 app.css(css())
-app.script(script())
+app.js(js())
+app.py(py())
 
 app.run('localhost', 8080, debug=True)
 ```
