@@ -1,6 +1,6 @@
 from flask import Flask, render_template_string
 
-__version__ = '0.3.1'
+__version__ = '0.3.1.1'
 
 def template_html(body):
     template = '''
